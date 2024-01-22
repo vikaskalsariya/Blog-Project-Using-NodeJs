@@ -1,0 +1,170 @@
+<%- include("header") %>
+
+    <!-- MAIN CONTENT-->
+    <div class="main-content">
+        <div class="section__content section__content--p30">
+            <div class="container-fluid">
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <!-- DATA TABLE -->
+                        <h3 class="title-5 m-b-35">All admin data</h3>
+                        <div class="table-data__tool">
+                            <div class="table-data__tool-left">
+                                <form>
+                                    <div class="form-row align-items-center">
+                                        <div class="col-auto">
+                                            <div class="input-group mb-3">
+
+                                                <input type="text" class="form-control" name="search" placeholder="Search by title" value="<%= search %>">
+                                                <div class="input-group-prepend">
+
+                                                    <button type="submit" value="Search" class="btn btn-primary"><i class="zmdi zmdi-search"></i></button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="table-data__tool-right">
+                                <a href="/admin/add_admin" class="au-btn au-btn-icon au-btn--green au-btn--small">
+                                    <i class="zmdi zmdi-plus"></i>add item</a>
+                                <div class="rs-select2--dark rs-select2--sm rs-select2--dark2">
+                                    <select class="js-select2" name="type">
+                                        <option selected="selected">Export</option>
+                                        <option value="">Option 1</option>
+                                        <option value="">Option 2</option>
+                                    </select>
+                                    <div class="dropDownSelect2"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <form action="/admin/deleteManyrecord" method="post">
+                        <div class="table-responsive table-responsive-data2">
+                            <table class="table table-data2">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            <label class="au-checkbox">
+                                                <input type="checkbox" id="SelectAll">
+                                                <span class="au-checkmark"></span>
+                                            </label>
+                                            <button class="ml-5" style="font-size: 22px;" type="submit"><i class="zmdi zmdi-delete"></i></button>
+                                        </th>
+                                        <th>name</th>
+                                        <th>email</th>
+                                        <th>gender</th>
+                                        <th>hobby</th>
+                                        <th>city</th>
+                                        <th>Image</th>
+                                        <th>Status</th>
+                                        <th>description</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="tr-shadow">
+                                        <% if(adminData !="" ) { for(var ad of adminData){ %>
+                                    <tr>
+                                        <td>
+                                            <label class="au-checkbox">
+                                                <input type="checkbox" class="selectBox" name="manyrecord[]" value="<%= ad.id %>">
+                                                <span class="au-checkmark"></span>
+                                            </label>
+                                        </td>
+
+                                        <td>
+                                            <%= ad.name %>
+                                        </td>
+                                        <td>
+                                            <%= ad.email %>
+                                        </td>
+                                        <td>
+                                            <%= ad.gender %>
+                                        </td>
+                                        <td>
+                                            <%= ad.hobby %>
+                                        </td>
+                                        <td>
+                                            <%= ad.city %>
+                                        </td>
+                                        <td><img src="<%= ad.admin_image %>" height="100px" alt=""></td>
+                                        <td>
+                                            <% if(ad.isActive==true) { %>
+                                                <a href="active/<%= ad.id %>"> Active </a>
+                                                <%} else {%>
+                                                    <a href="deactive/<%= ad.id %>">Deactive</a>
+                                                    <%}%>
+                                        </td>
+                                        <td>
+                                            <%= ad.message %>
+                                        </td>
+                                        <!-- <td></td> -->
+                                        <td>
+                                            <div class="table-data-feature">
+                                                
+                                                <a href="/admin/updateItem/<%= ad.id %>" class="item"
+                                                    data-toggle="tooltip" data-placement="top" title="Edit">
+                                                    <i class="zmdi zmdi-edit"></i>
+                                                </a href="#">
+                                                <a href="/admin/deleteItem/<%= ad.id %>" class="item"
+                                                    data-toggle="tooltip" data-placement="top" title="Delete">
+                                                    <i class="zmdi zmdi-delete"></i>
+                                                </a href="#">
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <% } }else{ %>
+                                        <tr>
+
+                                            <td colspan="10" class="text-center">
+                                                record not found
+                                            </td>
+                                        </tr>
+                                        <% }%>
+
+                                            </tr>
+                                </tbody>
+                            </table>
+                            <ul class="pagination">
+                                <% if(currentPage !=0){ %>
+
+                                    <li class="page-item">
+                                        <a class="page-link"
+                                            href="?page=<%= parseInt(currentPage)-1 %>&search=<%= search %>"
+                                            aria-label="Previous">
+                                            <span aria-hidden="true">&laquo;</span>
+                                        </a>
+                                    </li>
+                                    <% } %>
+
+                                        <li class="page-item"><a class="page-link"
+                                                href="?page=<%= currentPage %>&search=<%= search %>">
+                                                <%= parseInt(currentPage)+1 %>
+                                            </a></li>
+                                        <% if(parseInt(currentPage)+1<totalDocumets){ %>
+
+                                            <li class="page-item">
+                                                <a class="page-link"
+                                                    href="?page=<%= parseInt(currentPage)+1 %>&search=<%= search %>"
+                                                    aria-label="Next">
+                                                    <span aria-hidden="true">&raquo;</span>
+                                                    <% } %>
+                                                </a>
+                                            </li>
+                            </ul>
+                        </div>
+                    </form>
+                        <!-- END DATA TABLE -->
+                    </div>
+                </div>
+
+                <%- include("footer") %>
+
+                    <script>
+                        $(document).ready(function () {
+                            $("#SelectAll").click(function () {
+                                $(".selectBox").prop('checked', $(this).prop('checked'));
+                            });
+                        });
+                    </script>
